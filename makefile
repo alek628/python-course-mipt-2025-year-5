@@ -17,7 +17,7 @@ deps:
 run:
 	docker compose up
 
-run-local: setup
+run-local:
 	. venv/bin/activate && \
 		fastapi run --reload src/main.py && \
 		deactivate
