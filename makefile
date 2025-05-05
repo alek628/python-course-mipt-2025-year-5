@@ -15,18 +15,24 @@ deps:
 		deactivate
 
 run:
-	docker compose up
+	docker compose up --build
 
 run-local:
 	. venv/bin/activate && \
 		fastapi run --reload src/main.py && \
 		deactivate
 
+generate-secret:
+	echo >> .env
+	echo -n "secret_key="
+	hexdump -vn32 -e'4/4 "%08x" 1 ""' /dev/urandom >> .env
+	echo >> .env
+
+clean:
+	docker rm python-course-mipt-2025-year-5-db-1 python-course-mipt-2025-year-5-web-1 || true
+	docker volume rm python-course-mipt-2025-year-5_postgres_data || true
+
 lint:
-	echo tbd
-
-tests:
-	echo tbd
-
-link:
-	echo tbd
+	. venv/bin/activate && \
+		pylint src/ | tee /dev/tty > pylint.txt && \
+		deactivate
