@@ -1,0 +1,41 @@
+services:
+  web:
+    build: .
+    command: fastapi run src/main.py --port 80 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "80:80"
+    env_file: ".env"
+    networks:
+      - experiment-net
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  db:
+    image: postgres:12.5
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./migrations:/var/migrations
+      - ./migrations/docker-additional-entrypoint.sh:/docker-entrypoint-initdb.d/docker-additional-entrypoint.sh
+    env_file:
+      - ./postgres.env
+    ports:
+      - "5432:5432"
+    networks:
+      - experiment-net
+
+networks:
+  experiment-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
