@@ -16,7 +16,7 @@ def get_query_select_experiments_paginated(limit: int, offset: int) -> str:
             experiments.name,
             experiments.description,
             experiments.state,
-            users.name.as_("assignee"),
+            users.user_id.as_("assignee"),
         )
         .limit(limit)
         .offset(offset)
@@ -40,7 +40,7 @@ def get_query_select_experiments_by_email_paginated(
             experiments.name,
             experiments.description,
             experiments.state,
-            users.name.as_("assignee"),
+            users.user_id.as_("assignee"),
         )
         .where(users.email == email)
         .limit(limit)
@@ -267,7 +267,7 @@ def get_query_get_experiments_by_tag(tag: str, limit: int, offset: int) -> str:
             experiments.name,
             experiments.description,
             experiments.state,
-            users.name.as_("assignee"),
+            users.user_id.as_("assignee"),
         )
         .where(tags_list.name == tag)
         .limit(limit)
