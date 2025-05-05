@@ -1,0 +1,1 @@
+DROP TABLE users, experiments, tags_list, tags;

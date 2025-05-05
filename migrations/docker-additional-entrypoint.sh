@@ -1,0 +1,1 @@
+/var/migrations/apply.sh
